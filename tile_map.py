@@ -20,12 +20,14 @@ class TileMap:
         return f"{self.__class__.__name__}(Tiles: {len(self._tiles)})"
 
     def clear(self):
+        print("clear")
         self._tiles.clear()
 
     def items(self):
         return self._tiles.items()
 
     def save(self, filename):
+        print("save")
         data = {
             "tiles": [
                 {"x": x, "y": y, "tile": self.tile_to_dict(tile)} for (x, y), tile in self._tiles.items()
@@ -35,6 +37,7 @@ class TileMap:
             json.dump(data, f)
 
     def load(self, filename):
+        print("load")
         with open(filename, "r") as f:
             data = json.load(f)
         self._tiles = {
@@ -42,14 +45,14 @@ class TileMap:
             for tile_data in data["tiles"]
         }
 
+    @staticmethod
+    def clear_file(filename):
+        with open(filename, "w") as f:
+            json.dump({}, f)
+
     @classmethod
     def tile_to_dict(cls, tile):
-        if isinstance(tile, Conveyer):
-            return {"type": "Conveyer", "direction": tile.direction}
-        elif isinstance(tile, Starter):
-            return {"type": "Starter", "direction": tile.direction}
-        else:
-            return {"type": "Tile", "direction": tile.direction}
+        return {"type": type(tile).__name__, "variant": tile.variant}
 
     @classmethod
     def create_tile_from_dict(cls, tile_data):
