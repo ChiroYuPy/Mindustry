@@ -35,4 +35,4 @@ class Camera:
         left = right - WINDOW_WIDTH * self.zoom
         down = WINDOW_HEIGHT / 2 * self.zoom
         up = down - WINDOW_HEIGHT * self.zoom
-        return left, right, up ,down
+        return left, right, up, down

@@ -9,6 +9,7 @@ from sprite_manager import SpriteManager
 from tile import Tile, Conveyer, Starter, DirectionalTile, BasicConveyer, ArmoredConveyer, TitaniumConveyer, UpdatedTile
 from tile_map import TileMap
 
+
 class Editor:
     def __init__(self):
         self.tile_panel = [BasicConveyer, ArmoredConveyer, TitaniumConveyer]
@@ -43,6 +44,7 @@ class Editor:
         elif event.key == pygame.K_r:
             if isinstance(self.selected_tile, DirectionalTile):
                 self.selected_tile.direction = (self.selected_tile.direction + 1) % self.selected_tile.MAX_DIRECTION
+
 
 class Game:
     def __init__(self):

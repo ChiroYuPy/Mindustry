@@ -15,5 +15,3 @@ class TileMap:
         for (x, y), tile in self.tiles.items():
             if tile.tile_entity:
                 tile.tile_entity.update(self, x, y)
-
-

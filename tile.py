@@ -7,4 +7,3 @@ class Tile:
 
     def is_active(self):
         return self.tile_entity is not None
-

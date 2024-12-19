@@ -78,7 +78,7 @@ class Conveyer(DirectionalTile):
     def __init__(self, variant=0, direction=0):
         super().__init__(variant, direction)
         self.item = None
-        self.interval = 1/self.SPEED
+        self.interval = 1 / self.SPEED
         self.max_animation = self.MAX_ANIMATION
         self.animation_speed = self.SPEED
         self.progress = 0
@@ -122,10 +122,10 @@ class BasicConveyer(Conveyer):
         super().__init__(variant, direction)
 
     def get_image(self, sprite_manager):
-
         image = sprite_manager.get_animation_frame("conveyor", self.variant)
-        image = pygame.transform.rotate(image, self.direction*90)
+        image = pygame.transform.rotate(image, self.direction * 90)
         return image
+
 
 class ArmoredConveyer(Conveyer):
     def __init__(self, variant=0, direction=0):
@@ -133,8 +133,9 @@ class ArmoredConveyer(Conveyer):
 
     def get_image(self, sprite_manager):
         image = sprite_manager.get_animation_frame("armored-conveyor", self.variant)
-        image = pygame.transform.rotate(image, self.direction*90)
+        image = pygame.transform.rotate(image, self.direction * 90)
         return image
+
 
 class TitaniumConveyer(Conveyer):
     def __init__(self, variant=0, direction=0):
@@ -142,8 +143,9 @@ class TitaniumConveyer(Conveyer):
 
     def get_image(self, sprite_manager):
         image = sprite_manager.get_animation_frame("titanium-conveyor", self.variant)
-        image = pygame.transform.rotate(image, self.direction*90)
+        image = pygame.transform.rotate(image, self.direction * 90)
         return image
+
 
 class Starter(DirectionalTile):
     MAX_DIRECTION = 4
