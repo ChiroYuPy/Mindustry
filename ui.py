@@ -10,9 +10,9 @@ class Widget:
     def draw(self, surface):
         raise ValueError("This method must be overridden")
 
-    def update_position(self, parent_pos):
-        self._rect.x = parent_pos.x + self._relative_pos.x
-        self._rect.y = parent_pos.y + self._relative_pos.y
+    def update_position(self, origin_pos):
+        self._rect.x = origin_pos.x + self._relative_pos.x
+        self._rect.y = origin_pos.y + self._relative_pos.y
 
     def is_hover(self, mouse_pos):
         self._hovered = self._rect.collidepoint(mouse_pos)
@@ -92,10 +92,10 @@ class Container:
         for container in self._containers:
             container.draw(surface)
 
-    def update_position(self, parent_pos=None):
-        if parent_pos:
-            self._rect.x = parent_pos.x + self._relative_pos.x
-            self._rect.y = parent_pos.y + self._relative_pos.y
+    def update_position(self, origin_pos=None):
+        if origin_pos:
+            self._rect.x = origin_pos.x + self._relative_pos.x
+            self._rect.y = origin_pos.y + self._relative_pos.y
         for widget in self._widgets:
             widget.update_position(self._rect)
         for container in self._containers:

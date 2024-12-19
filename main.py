@@ -1,4 +1,5 @@
 import sys
+
 import pygame
 
 from camera import Camera
@@ -37,6 +38,12 @@ class Game:
 
         self.mouse_button_left = False
 
+    def render(self):
+        self.display.fill((24, 24, 24))
+        self.world.draw(self.display, self.camera, tick=self.clock.tick)
+        self.editor.draw(self.display)
+        pygame.display.flip()
+
     def run(self):
         running = True
 
@@ -48,13 +55,10 @@ class Game:
 
             self.tile_map.update()
 
-            self.display.fill((24, 24, 24))
-            self.world.draw(self.display, self.camera, tick=self.clock.tick)
-            self.editor.draw(self.display)
-            pygame.display.flip()
+            self.render()
 
-            delta_time = self.clock.update(1000)
-            # print(1/delta_time)
+            dt = self.clock.update(165)
+            # print(1/dt)
 
 
 if __name__ == "__main__":

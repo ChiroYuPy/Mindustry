@@ -7,3 +7,6 @@ class Tile:
 
     def is_active(self):
         return self.tile_entity is not None
+
+    def __copy__(self):
+        return Tile(self.tile_type, self.variant, self.rotation, self.tile_entity.copy())
