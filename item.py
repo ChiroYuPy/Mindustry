@@ -1,4 +1,4 @@
 class Item:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, item_type):
+        self.item_type = item_type
+        self.position = 0

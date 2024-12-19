@@ -3,9 +3,10 @@ import pygame
 from camera import Camera
 from config import *
 from gui import GUI
+from item import Item
 from map_renderer import MapRenderer
 from sprite_manager import SpriteManager
-from tile import Tile, Conveyer, Starter, DirectionalTile, BasicConveyer, ArmoredConveyer, TitaniumConveyer
+from tile import Tile, Conveyer, Starter, DirectionalTile, BasicConveyer, ArmoredConveyer, TitaniumConveyer, UpdatedTile
 from tile_map import TileMap
 
 class Editor:
@@ -38,14 +39,14 @@ class Editor:
             self.next_tile()
         elif event.key == pygame.K_e:
             if isinstance(self.selected_tile, Tile):
-                self.selected_tile.variant = (self.selected_tile.variant + 1) % self.selected_tile.max_variant
+                self.selected_tile.variant = (self.selected_tile.variant + 1) % self.selected_tile.MAX_VARIANT
         elif event.key == pygame.K_r:
             if isinstance(self.selected_tile, DirectionalTile):
-                self.selected_tile.direction = (self.selected_tile.direction + 1) % self.selected_tile.max_direction
+                self.selected_tile.direction = (self.selected_tile.direction + 1) % self.selected_tile.MAX_DIRECTION
 
 class Game:
     def __init__(self):
-        self.current_time = 0
+        self.current_time = time.time()
         self.display = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), pygame.SRCALPHA)
         pygame.display.set_caption("Factorio de Wish")
 
@@ -53,7 +54,7 @@ class Game:
         self.items = []
 
         self.sprite_manager = SpriteManager()
-        self.sprite_manager.load_sprite_sheet("assets/blocks/distribution/conveyors", "conveyor", 5, 4, 12)
+        self.sprite_manager.load_sprite_sheet("assets/blocks/distribution/conveyors", "conveyor", 5, 4, 8)
         self.sprite_manager.load_sprite_sheet("assets/blocks/distribution/conveyors", "armored-conveyor", 5, 4, 12)
         self.sprite_manager.load_sprite_sheet("assets/blocks/distribution/conveyors", "titanium-conveyor", 5, 4, 12)
 
@@ -66,6 +67,17 @@ class Game:
 
         self.mouse_button_left_pressed = False
         self.running = True
+
+        for x in range(0, 16):
+            self.generate_tile(x, 0)
+
+        item = Item(0, 0)
+        self.tile_map[(0, 0)].item = item
+        self.add_item(item)
+
+        item = Item(4, 0)
+        self.tile_map[(4, 0)].item = item
+        self.add_item(item)
 
     def add_item(self, item):
         self.items.append(item)
@@ -97,7 +109,7 @@ class Game:
         self.editor.selected_tile = self.tile_map[(x, y)]
         self.sprite_manager.update_animation_frame(self.camera.zoom)
         for (x, y), tile in self.tile_map.items():
-            if isinstance(tile, Starter):
+            if isinstance(tile, UpdatedTile):
                 tile.update(self, x, y, dt)
 
     def handle_events(self):
