@@ -1,3 +1,6 @@
+from copy import copy
+
+
 class Tile:
     def __init__(self, tile_type, variant=None, rotation=0, tile_entity=None):
         self.tile_type = tile_type
@@ -9,4 +12,4 @@ class Tile:
         return self.tile_entity is not None
 
     def __copy__(self):
-        return Tile(self.tile_type, self.variant, self.rotation, self.tile_entity.copy())
+        return Tile(self.tile_type, self.variant, self.rotation, copy(self.tile_entity))

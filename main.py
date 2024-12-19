@@ -19,7 +19,7 @@ class Game:
         self.display = pygame.display.set_mode((1920, 1080), pygame.SRCALPHA)
         self.clock = Clock()
 
-        self.tile_size = 64
+        self.tile_size = 128
 
         self.camera = Camera()
 
@@ -28,9 +28,9 @@ class Game:
         self.image_manager.resize(self.tile_size)
 
         self.tile_map = TileMap()
-        self.tile_map.place_tile(0, 0, Tile("sol"))
-        self.tile_map.place_tile(1, 0, Tile("conveyor-basic-normal", tile_entity=ConveyorTE(0).items.append(Item(0))))
-        self.tile_map.place_tile(0, 1, Tile("conveyor-titanium-corner", tile_entity=ConveyorTE(0)))
+        self.tile_map.set_tile(0, 0, Tile("sol"))
+        self.tile_map.set_tile(1, 0, Tile("conveyor-basic-normal", tile_entity=ConveyorTE(0).items.append(Item(0))))
+        self.tile_map.set_tile(0, 1, Tile("conveyor-titanium-corner", tile_entity=ConveyorTE(0)))
 
         self.world = World(self.tile_map, self.image_manager, self.tile_size)
 

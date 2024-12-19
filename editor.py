@@ -1,3 +1,5 @@
+import copy
+
 import pygame
 
 from tile import Tile
@@ -71,10 +73,27 @@ class Editor:
 
             if self.tool == "multi_selection" or self.tool == "line_selection":
                 color = (127, 196, 255) if self.tool == "multi_selection" else (255, 127, 0)
-                if self.start_selection_tile_pos:
+                if self.start_selection_tile_pos and self.end_selection_tile_pos:
                     start_x, start_y = self.start_selection_tile_pos
-                    end_x, end_y = self.end_selection_tile_pos if not self.mouse_button_left and self.end_selection_tile_pos else self.preview_tile_pos
+                    end_x, end_y = self.end_selection_tile_pos
                     self.world.draw_tile_area_frame(self.display, self.camera, start_x, start_y, end_x, end_y, color=color)
+
+    def update_selections(self):
+        if self.mouse_button_left:
+            if self.tool == "multi_selection":
+                self.end_selection_tile_pos = self.preview_tile_pos
+            elif self.tool == "line_selection":
+                if self.start_selection_tile_pos:
+                    x, y = self.preview_tile_pos
+                    start_x, start_y = self.start_selection_tile_pos
+
+                    diff_x = abs(x - start_x)
+                    diff_y = abs(y - start_y)
+
+                    if diff_x > diff_y:
+                        self.end_selection_tile_pos = (x, start_y)
+                    else:
+                        self.end_selection_tile_pos = (start_x, y)
 
     def update_preview_pos(self):
         x, y = self.mouse_pos
@@ -92,9 +111,32 @@ class Editor:
         self.selected_tile = self.tile_map.get_tile(x, y)
 
     def place_tile(self):
-        if self.selected_tile_pos:
-            x, y = self.selected_tile_pos
-            self.tile_map.place_tile(x, y, Tile(tile_entity=ConveyorTE(), tile_type="conveyor-basic-normal"))
+        if self.tool == "building":
+            if self.selected_tile_pos:
+                x, y = self.selected_tile_pos
+                self.tile_map.set_tile(x, y, copy.copy(self.preview_tile))
+        elif self.tool == "multi_selection" or self.tool == "line_selection":
+            if self.start_selection_tile_pos and self.end_selection_tile_pos:
+                start_x, start_y = self.start_selection_tile_pos
+                end_x, end_y = self.end_selection_tile_pos
+                self.place_tile_area(start_x, start_y, end_x, end_y, self.preview_tile)
+
+    def place_tile_area(self, start_x, start_y, end_x, end_y, tile):
+
+        if start_x > end_x:
+            temp = start_x
+            start_x = end_x
+            end_x = temp
+
+        if start_y > end_y:
+            temp = start_y
+            start_y = end_y
+            end_y = temp
+
+        for x in range(start_x, end_x+1):
+            for y in range(start_y, end_y+1):
+                tile_copy = copy.copy(tile)
+                self.tile_map.set_tile(x, y, tile_copy)
 
     def rotate_preview_tile(self):
         self.preview_tile.rotation = (self.preview_tile.rotation + 1) % 4
@@ -114,6 +156,7 @@ class Editor:
     def handle_events(self, event):
         self.mouse_pos = pygame.mouse.get_pos()
         self.update_preview_pos()
+        self.update_selections()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
                 self.place_tile()
@@ -125,6 +168,7 @@ class Editor:
             elif event.button == 1:
                 self.mouse_button_left = True
                 self.start_selection_tile_pos = self.preview_tile_pos
+                self.end_selection_tile_pos = self.preview_tile_pos
                 self.select_tile()
                 for button in self.buttons:
                     button.press()
@@ -133,7 +177,6 @@ class Editor:
                 self.mouse_button_right = False
             elif event.button == 1:
                 self.mouse_button_left = False
-                self.end_selection_tile_pos = self.preview_tile_pos
                 for button in self.buttons:
                     button.release()
         elif event.type == pygame.MOUSEWHEEL:

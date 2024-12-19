@@ -24,14 +24,14 @@ class Camera:
 
     def world_to_screen(self, wx, wy, ox, oy, tile_size, with_zoom=False):
         zoom_factor = self.zoom if with_zoom else 1
-        sx = (wx * tile_size - self._position.x) * zoom_factor + ox
-        sy = (wy * tile_size - self._position.y) * zoom_factor + oy
+        sx = int((wx * tile_size - self._position.x) * zoom_factor + ox)
+        sy = int((wy * tile_size - self._position.y) * zoom_factor + oy)
         return sx, sy
 
     def screen_to_world(self, sx, sy, ox, oy, tile_size, with_zoom=False):
         zoom_factor = self._zoom if with_zoom else 1
-        wx = ((sx - ox) / zoom_factor + self._position.x) // tile_size
-        wy = ((sy - oy) / zoom_factor + self._position.y) // tile_size
+        wx = int(((sx - ox) / zoom_factor + self._position.x) // tile_size)
+        wy = int(((sy - oy) / zoom_factor + self._position.y) // tile_size)
         return wx, wy
 
     def zoom_in(self):
@@ -41,5 +41,6 @@ class Camera:
         self._zoom = min(self._zoom * self._zoom_schedule, self._max_zoom)
 
     def move(self, dx, dy):
+        print(self._position)
         self._position.x += dx / self._zoom
         self._position.y += dy / self._zoom
