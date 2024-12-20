@@ -19,10 +19,11 @@ class World:
             display.blit(texture, (tile_screen_x, tile_screen_y))
 
     def draw_tile(self, display, camera, x, y, tile, frame=0, alpha=255):
+        print(1)
         window_width, window_height = display.get_size()
         tile_screen_x, tile_screen_y = camera.world_to_screen(x, y, window_width / 2, window_height / 2, self.tile_size)
 
-        texture = self.texture_manager.get_image(tile.tile_type, frame=frame)
+        texture = self.texture_manager.get_image(tile.tile_type, frame=frame).copy()
         texture.convert_alpha()
         texture.set_alpha(alpha)
         display.blit(texture, (tile_screen_x, tile_screen_y))
